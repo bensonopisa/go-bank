@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15-alpine3.18
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=gobank
+      - POSTGRES_PASSWORD=gobank_pwd
+    networks:
+      - gobank
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - gobank
+networks:
+  gobank:
