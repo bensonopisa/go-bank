@@ -15,19 +15,24 @@ type Account struct {
 
 type Route struct {
 	Method      string
-	HandlerFunc     func(w http.ResponseWriter, r *http.Request)
+	HandlerFunc func(w http.ResponseWriter, r *http.Request)
 	Path        string
 	Description string
 }
 
+type BaseResponse struct {
+	ResponseCode string `json:"response_code"`
+	Message      string `json:"message"`
+}
 
-func NewAccount(name string) *Account{
+func NewAccount(name string) *Account {
 	return &Account{
-		ID: rand.Intn(100),
-		Name: name,
+		ID:        rand.Intn(100),
+		Name:      name,
 		CreatedAt: time.Now().UTC(),
 	}
 }
+
 type Accounts []Account
 
 type Routes []Route
