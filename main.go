@@ -26,6 +26,11 @@ type ApiServer struct {
 }
 type apiFunc func(w http.ResponseWriter, r *http.Request) error
 
+type UpdateReqest struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 var routes Routes
 var database *Database
 
@@ -167,20 +172,24 @@ func handleCreateAccount(w http.ResponseWriter, r *http.Request) error {
 }
 
 func handleUpdateAccount(w http.ResponseWriter, r *http.Request) error {
-	account, err := serializeBody(r)
-	accounts := make(Accounts, 0)
+	// take the body from the request
+	// run the query to update the relevant field(s) returning the possible error if any
+	// return a response object with success response
+	var updateRequest UpdateReqest
+	err := json.NewDecoder(r.Body).Decode(&updateRequest)
 	if err != nil {
 		return err
 	}
+	_ , err = database.Db.Query(updateAccount, updateRequest.Name, updateRequest.ID)
 
-	for _, v := range accounts {
-		if v.ID == account.ID {
-			log.Println("Account name ", account.Name)
-			v.Name = account.Name
-			return writeJSON(w, &v)
-		}
+	if err != nil {
+		return err
 	}
-	return nil
+	return writeJSON(w, &BaseResponse{
+		Message: "updated account successfully",
+		ResponseCode: "1001",
+	})
+	
 }
 func handleGetAccountById(w http.ResponseWriter, r *http.Request) error {
 	accounts := make(Accounts, 0)

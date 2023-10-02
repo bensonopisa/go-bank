@@ -11,4 +11,6 @@ const (
 	fetchAllAccounts = `select * from accounts`
 
 	insertNewAccount = `insert into accounts (name, balance, createdAt) values ($1, $2, $3)`
+
+	updateAccount = `update accounts set name = $1 where id =$2`
 )
